@@ -1,12 +1,16 @@
 <script lang="ts">
-	// @ts-expect-error
-	import CameraPhoto, { FACING_MODES, IMAGE_TYPES } from "jslib-html5-camera-photo";
+	import CameraPhoto, { FACING_MODES, type FacingModes } from "jslib-html5-camera-photo";
 
 	let dataUri;
 
-	$: cameras = [];
+	let cameras: any[] = [];
+	let cameraId = 0;
 
-	let cameraPhoto: any;
+	function nextNumber() {
+		cameraId = (cameraId + 1) % cameras.length;
+	}
+
+	let cameraPhoto: CameraPhoto;
 
 	function createCamera(node: HTMLVideoElement) {
 		cameraPhoto = new CameraPhoto(node);
@@ -28,19 +32,17 @@
 
 <button
 	on:click={() => {
-		let facingMode = cameraPhoto.getCameraSettings()?.facingMode;
-
-		cameraPhoto.stopCamera();
-		cameraPhoto.startCamera(
-			facingMode == FACING_MODES.ENVIRONMENT ? FACING_MODES.USER : FACING_MODES.ENVIRONMENT
-		);
+		cameraPhoto.stopCamera().catch((error) => console.error(error.message));
+		nextNumber();
+		cameraPhoto.startCamera(cameras[cameraId].deviceId);
 	}}>Switch</button
 >
-
+<br />
 <video use:createCamera id="viewfinder" autoplay={true}> <track kind="captions" /></video>
 
 <!-- <pre>{JSON.stringify(cameraPhoto.getCameraSettings(), null, 2)}</pre> -->
 <br />
+<pre>{JSON.stringify(cameraId, null, 2)}</pre>
 {#each cameras as camera}
 	<pre>{JSON.stringify(camera, null, 2)}</pre>
 {/each}
