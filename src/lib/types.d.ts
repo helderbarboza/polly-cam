@@ -59,13 +59,17 @@ declare module "jslib-html5-camera-photo" {
 		settings: MediaTrackSettings | null;
 		numberOfMaxResolutionTry: number;
 		stream: MediaStream | null;
+		cameras: Array<object>;
 		inputVideoDeviceInfos: MediaDeviceInfo[];
 		constructor(videoElement: HTMLVideoElement);
 		getCameraSettings(): MediaTrackSettings | null;
 		getInputVideoDeviceInfos(): MediaDeviceInfo[];
-		startCamera(idealFacingMode?: FacingMode, idealResolution?: Resolution): Promise<MediaStream>;
+		startCamera(
+			idealFacingMode?: FacingMode | MediaDeviceInfo.deviceId,
+			idealResolution?: Resolution
+		): Promise<MediaStream>;
 		enumerateCameras(): Promise<object[]>;
-		startCameraMaxResolution(idealFacingMode?: FacingMode | {}): Promise<MediaStream>;
+		startCameraMaxResolution(idealFacingMode?: FacingMode | object): Promise<MediaStream>;
 		getDataUri(userConfig: CaptureConfigOption): string;
 		stopCamera(): Promise<void>;
 	}
