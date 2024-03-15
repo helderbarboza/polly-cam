@@ -1,78 +1,83 @@
 declare module "jslib-html5-camera-photo" {
-	export interface FacingModes {
-		USER: "user";
-		ENVIRONMENT: "environment";
-	}
+  export interface FacingModes {
+    USER: "user";
+    ENVIRONMENT: "environment";
+  }
 
-	export interface ImageTypes {
-		PNG: "png";
-		JPG: "jpg";
-	}
+  export interface ImageTypes {
+    PNG: "png";
+    JPG: "jpg";
+  }
 
-	type FacingMode = "user" | "environment";
-	type ImageType = "png" | "jpg";
+  type FacingMode = "user" | "environment";
+  type ImageType = "png" | "jpg";
 
-	interface Resolution {
-		height?: MediaTrackConstraints["height"] | undefined;
-		width?: MediaTrackConstraints["width"] | undefined;
-	}
+  interface Resolution {
+    height?: MediaTrackConstraints["height"] | undefined;
+    width?: MediaTrackConstraints["width"] | undefined;
+  }
 
-	export const FACING_MODES: FacingModes;
-	export const IMAGE_TYPES: ImageTypes;
+  export const FACING_MODES: FacingModes;
+  export const IMAGE_TYPES: ImageTypes;
+  export function downloadPhoto(
+    dataUri: string,
+    filenamePrefix: string,
+    numberPrefix: number
+  ): void;
 
-	export interface CaptureConfigOption {
-		/**
-		 * Used to get a desired resolution. Example, a sizeFactor of `1` get the
-		 * same resolution of the camera while sizeFactor of `0.5` get the half
-		 * resolution of the camera. The sizeFactor can be between range of `]0, 1]`
-		 * and the default value is `1`.
-		 */
-		sizeFactor?: number | undefined;
-		/**
-		 * Used to get the desired image type between `jpg` or `png`. to specify
-		 * the imageType use the constant IMAGE_TYPES, for example to specify jpg
-		 * format use IMAGE_TYPES.JPG. The default imageType is `png`
-		 */
-		imageType?: ImageType | undefined;
-		/**
-		 * Used to get the desired compression when `jpg` is selected. choose a
-		 * compression between `[0, 1]`, 1 is maximum, 0 is minimum. The default
-		 * value imageCompression is `0.92`.
-		 */
-		imageCompression?: number | null | undefined;
-		/**
-		 * Used to get an image mirror when is set to `true`, the result of the
-		 * `dataUri` is the mirror of the actual camera data. Many software that use
-		 * camera mirror like hangout etc... Please note if you want to enable this
-		 * option, for consistency with the camera video, you need to use css
-		 * `transform: rotateY(180deg)` to the **&lt;video&gt;** tag to mirror the
-		 * stream, because the stream is not mirrored. It's only apply to the canvas
-		 * dataUri. The default value is `false` (no mirror).
-		 */
-		isImageMirror?: boolean | undefined;
-	}
+  export interface CaptureConfigOption {
+    /**
+     * Used to get a desired resolution. Example, a sizeFactor of `1` get the
+     * same resolution of the camera while sizeFactor of `0.5` get the half
+     * resolution of the camera. The sizeFactor can be between range of `]0, 1]`
+     * and the default value is `1`.
+     */
+    sizeFactor?: number | undefined;
+    /**
+     * Used to get the desired image type between `jpg` or `png`. to specify
+     * the imageType use the constant IMAGE_TYPES, for example to specify jpg
+     * format use IMAGE_TYPES.JPG. The default imageType is `png`
+     */
+    imageType?: ImageType | undefined;
+    /**
+     * Used to get the desired compression when `jpg` is selected. choose a
+     * compression between `[0, 1]`, 1 is maximum, 0 is minimum. The default
+     * value imageCompression is `0.92`.
+     */
+    imageCompression?: number | null | undefined;
+    /**
+     * Used to get an image mirror when is set to `true`, the result of the
+     * `dataUri` is the mirror of the actual camera data. Many software that use
+     * camera mirror like hangout etc... Please note if you want to enable this
+     * option, for consistency with the camera video, you need to use css
+     * `transform: rotateY(180deg)` to the **&lt;video&gt;** tag to mirror the
+     * stream, because the stream is not mirrored. It's only apply to the canvas
+     * dataUri. The default value is `false` (no mirror).
+     */
+    isImageMirror?: boolean | undefined;
+  }
 
-	class CameraPhoto {
-		videoElement: HTMLVideoElement;
-		windowURL: URL;
-		mediaDevices: MediaDevices | null;
-		settings: MediaTrackSettings | null;
-		numberOfMaxResolutionTry: number;
-		stream: MediaStream | null;
-		cameras: Array<object>;
-		inputVideoDeviceInfos: MediaDeviceInfo[];
-		constructor(videoElement: HTMLVideoElement);
-		getCameraSettings(): MediaTrackSettings | null;
-		getInputVideoDeviceInfos(): MediaDeviceInfo[];
-		startCamera(
-			idealFacingMode?: FacingMode | MediaDeviceInfo.deviceId,
-			idealResolution?: Resolution
-		): Promise<MediaStream>;
-		enumerateCameras(): Promise<object[]>;
-		startCameraMaxResolution(idealFacingMode?: FacingMode | object): Promise<MediaStream>;
-		getDataUri(userConfig: CaptureConfigOption): string;
-		stopCamera(): Promise<void>;
-	}
+  class CameraPhoto {
+    videoElement: HTMLVideoElement;
+    windowURL: URL;
+    mediaDevices: MediaDevices | null;
+    settings: MediaTrackSettings | null;
+    numberOfMaxResolutionTry: number;
+    stream: MediaStream | null;
+    cameras: Array<object>;
+    inputVideoDeviceInfos: MediaDeviceInfo[];
+    constructor(videoElement: HTMLVideoElement);
+    getCameraSettings(): MediaTrackSettings | null;
+    getInputVideoDeviceInfos(): MediaDeviceInfo[];
+    startCamera(
+      idealFacingMode?: FacingMode | MediaDeviceInfo.deviceId,
+      idealResolution?: Resolution
+    ): Promise<MediaStream>;
+    enumerateCameras(): Promise<object[]>;
+    startCameraMaxResolution(idealFacingMode?: FacingMode | object): Promise<MediaStream>;
+    getDataUri(userConfig: CaptureConfigOption): string;
+    stopCamera(): Promise<void>;
+  }
 
-	export default CameraPhoto;
+  export default CameraPhoto;
 }
